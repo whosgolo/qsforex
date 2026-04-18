@@ -6,8 +6,13 @@ from zoneinfo import ZoneInfo
 import pandas as pd
 import streamlit as st
 
-from app.analysis import compute_trade_plan, pick_best_trade
-from app.tradingview_client import TradingViewClient, TradingViewError
+try:
+    from app.analysis import compute_trade_plan, pick_best_trade
+    from app.tradingview_client import TradingViewClient, TradingViewError
+except ModuleNotFoundError:
+    # Fallback when running from inside the app/ directory
+    from analysis import compute_trade_plan, pick_best_trade
+    from tradingview_client import TradingViewClient, TradingViewError
 
 INTERVALS = ["1m", "5m", "15m", "30m", "1h", "4h", "1d"]
 DEFAULT_INTERVALS = ["5m", "15m", "1h", "4h"]

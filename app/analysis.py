@@ -3,7 +3,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Dict, Iterable, List, Tuple
 
-from app.tradingview_client import INTERVAL_SUFFIX
+try:
+    from app.tradingview_client import INTERVAL_SUFFIX
+except ModuleNotFoundError:
+    # Fallback when running from inside the app/ directory
+    from tradingview_client import INTERVAL_SUFFIX
 
 
 @dataclass(frozen=True)

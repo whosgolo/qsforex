@@ -151,9 +151,13 @@ This repository now includes a Streamlit web app that:
 
 ### Run the UI
 
+Run this command from the repository root (the folder that contains `app/`).
+
 ```bash
 pip install -r requirements.txt
 streamlit run app/ui.py
+# alternatively (works from any current directory):
+python -m streamlit run app/ui.py
 ```
 
 ### Important risk and data notes
