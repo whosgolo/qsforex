@@ -138,3 +138,30 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 # Forex Trading Disclaimer
 
 Trading foreign exchange on margin carries a high level of risk, and may not be suitable for all investors. Past performance is not indicative of future results. The high degree of leverage can work against you as well as for you. Before deciding to invest in foreign exchange you should carefully consider your investment objectives, level of experience, and risk appetite. The possibility exists that you could sustain a loss of some or all of your initial investment and therefore you should not invest money that you cannot afford to lose. You should be aware of all the risks associated with foreign exchange trading, and seek advice from an independent financial advisor if you have any doubts.
+## QSForex Analytic Web UI (TradingView-backed)
+
+This repository now includes a Streamlit web app that:
+
+- Loads all currently discoverable `PEPPERSTONE` forex symbols from TradingView's symbol search endpoint.
+- Performs multi-timeframe analysis (`1m`, `5m`, `15m`, `30m`, `1h`, `4h`, `1d`) using TradingView scanner indicator fields.
+- Suggests `Long`, `Short` or `No Trade` with confidence.
+- Produces safe/risky take-profit and stop-loss targets from ATR + pivot levels.
+- Shows the current best trade across all Pepperstone pairs.
+- Displays timestamps in German time (`Europe/Berlin`) and prices to 5 decimals.
+
+### Run the UI
+
+Run this command from the repository root (the folder that contains `app/`).
+
+```bash
+pip install -r requirements.txt
+streamlit run app/ui.py
+# alternatively (works from any current directory):
+python -m streamlit run app/ui.py
+```
+
+### Important risk and data notes
+
+- No trading model can guarantee profitability.
+- No third-party feed can guarantee perfect 1:1 parity with broker execution prices at all moments.
+- Always confirm bid/ask and order constraints directly in your Pepperstone/TradingView connected account before sending live orders.
