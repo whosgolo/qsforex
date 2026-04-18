@@ -31,6 +31,7 @@ def load_pepperstone_pairs() -> list[str]:
 st.set_page_config(page_title="QSForex Analyst", page_icon="📈", layout="wide")
 st.title("📈 QSForex Multi-Timeframe Analyst")
 st.caption("Live analysis using TradingView scanner endpoints with German time (Europe/Berlin).")
+st.info("If TradingView blocks symbol lookup (HTTP 403), the app automatically falls back to a built-in major/minor forex pair list.")
 
 with st.sidebar:
     st.header("Settings")

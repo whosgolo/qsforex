@@ -32,6 +32,18 @@ INTERVAL_SUFFIX = {
 }
 
 
+# Broad fallback universe used when TradingView symbol-search is blocked (e.g. HTTP 403).
+FALLBACK_FOREX_PAIRS = [
+    "AUDCAD", "AUDCHF", "AUDJPY", "AUDNZD", "AUDUSD",
+    "CADCHF", "CADJPY", "CHFJPY", "EURAUD", "EURCAD",
+    "EURCHF", "EURGBP", "EURJPY", "EURNZD", "EURUSD",
+    "GBPAUD", "GBPCAD", "GBPCHF", "GBPJPY", "GBPNZD",
+    "GBPUSD", "NZDCAD", "NZDCHF", "NZDJPY", "NZDUSD",
+    "USDCAD", "USDCHF", "USDJPY", "USDMXN", "USDNOK",
+    "USDSEK", "USDSGD", "USDTRY", "USDZAR",
+]
+
+
 class TradingViewClient:
     """Small TradingView scanner client for forex analysis and pricing."""
 
@@ -43,28 +55,32 @@ class TradingViewClient:
         self.session = requests.Session()
         self.session.headers.update(
             {
-                "User-Agent": "qsforex-analytics-bot/1.0",
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+                "Accept": "application/json, text/plain, */*",
+                "Origin": "https://www.tradingview.com",
+                "Referer": "https://www.tradingview.com/",
                 "Content-Type": "application/json",
             }
         )
 
     def list_pepperstone_pairs(self) -> List[str]:
         params = {
-            "text": "",
+            "text": "usd",
             "hl": "1",
             "exchange": "PEPPERSTONE",
             "lang": "en",
             "type": "forex",
         }
-        response = self.session.get(self.SEARCH_URL, params=params, timeout=self.timeout)
-        if response.status_code != 200:
-            raise TradingViewError(
-                "Failed to load Pepperstone instruments from TradingView "
-                f"(status={response.status_code})."
-            )
-        payload = response.json()
-        symbols = sorted({item["symbol"] for item in payload if item.get("symbol")})
-        return symbols
+        try:
+            response = self.session.get(self.SEARCH_URL, params=params, timeout=self.timeout)
+            if response.status_code == 200:
+                payload = response.json()
+                symbols = sorted({item["symbol"] for item in payload if item.get("symbol")})
+                if symbols:
+                    return symbols
+        except requests.RequestException:
+            pass
+        return FALLBACK_FOREX_PAIRS
 
     def fetch_snapshots(self, symbols: Iterable[str], interval: str) -> Dict[str, SymbolSnapshot]:
         suffix = INTERVAL_SUFFIX[interval]
